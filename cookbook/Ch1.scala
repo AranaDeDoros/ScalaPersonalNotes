@@ -1,4 +1,4 @@
-
+object Main extends App {
 
 val lpotencias:List[Int] = List.range(1,100000)
 
@@ -108,3 +108,4 @@ Classes
 allowed (not at the top level).” This means that your implicit class must be defined inside
 a class, object, or package object.
  */
+}
