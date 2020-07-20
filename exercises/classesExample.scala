@@ -3,9 +3,10 @@ import scala.util.Random
 object Cipher extends App{
 
 	class Coder(){
-		val seed = 5
-		val rnd = new Random(seed)
-		var cipheringKey = 0
+		
+		private val seed = 5
+		private val rnd = new Random(seed)
+		private var cipheringKey = 0
 
 		def cipher(s:String): String ={
 			cipheringKey = rnd.nextInt(25)
