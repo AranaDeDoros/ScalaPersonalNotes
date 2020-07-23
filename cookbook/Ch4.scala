@@ -401,7 +401,7 @@ object Chapter4 extends App{
 	//you want to create a base class that requires constructor arguments
 	//code will be called from Java code
 	//trait Animal(name: String) //no
-	//whenever a behavaiour must have construct parameters
+	//whenever a behaviour must have construct parameters
 	//abstract class Animall(name:String)
 	//def speak
 
@@ -418,6 +418,261 @@ object Chapter4 extends App{
 
 	//**************4.13****************//	
 
+	//defining properties in abstract base class
+	abstract class Pet (name: String) {
+		
+		val greeting: String
+		var age: Int
+		def sayHello: Unit = {println(greeting)}
+		override def toString = s"I say $greeting, and I'm $age"
+
+	}
+
+	class Dogg(name: String) extends Pet(name){
+		
+		val greeting = "woof"
+		var age = 2
+
+	}
+
+	class Catt(name: String) extends Pet(name){
+		
+		val greeting = "meow"
+		var age = 5
+
+	}
+
+	val dog = new Dogg("Frido")
+	val cat = new Catt("Morris")
+	dog.sayHello
+	cat.sayHello
+	println(dog)
+	println(cat)
+	//verify that the age can be changed
+	cat.age = 10
+	println(cat)
+
+	/*
+	abstract class Pett(name: String){
+		def greeting: String
+	}	
+
+	class Doggg(name:String) extends Pett(name){
+		val greeting= "Woof"
+	}
+
+	val dogz = new Doggg("fido")
+	println(dog.greeting)
+
+	//when concrete, override
+	abstract class Animal {
+		val greeting = "hello" //provive initial
+		def sayHello { println(greeting)}
+		def run
+	}
+
+	class Dog extends Animal{
+		override val greeting = "woof" //override the value
+		def run {println("dog is running")}
+	}
+
+	//greeting is generated
+	abstract class Animal{
+		val greeting = { println("Animal"); "Hello"}
+	}
+
+	class Dog extends Animal{
+		override val greeting = {println("dog") "woof"}
+	}
+
+	//prevent a val field in an asbract base class
+	//from being overriden in a subclass
+	//declare the field as final val
+	abstract class  Animal{
+		final val greeting = "hello"
+	}
+
+	class Dog extends Animal{
+		val greeting = "woof"
+	}
+
+	//concrete var in abstract
+	abstract class Animal {
+		var greeting = "hello"
+		var age = 0
+		override def toString = s"I say $greeting, and I'm $age years old"
+	}
+
+	class Dog extends Animal{
+		greeting = "woof"
+		age = 2
+	}
+
+	//avoiding null
+	trait Animal{
+		var greeting: Option[Int] = None
+		var age: Option[Int] = None
+		override def toString = s"I say $greeting, and I'm $age years old"
+	}
+
+	class Dog extends Animal{
+		var greeting = Some("Woof")
+		age = Some(2)
+	}
+
+	val d = new Dog
+	println(d)*/
+
+
+	//**************4.14****************//
+	
+	//case class boilerplate
+	//apply, accesor and/or mutator, toString, equals
+	//hashCode, copy, unapply
+	/*
+	case class Person(name: String, relation: String)
+	val emily = Person("emiliy", "niece")
+	println(emily.name)
+	emily.name = "fred"
+
+	case class Company(var name:String)
+
+	val c = Company("Mat-su Valley")
+	println(c.name) //toString
+	c.name = "valley programming"
+
+	emily match { case Person(n, r) => println(n, r)}
+	val hannah = Person("Hannah", "niece")
+	println(emily == hannah)
+
+	case class Employee(name: String, loc:String, role:String)
+	val fred = Employee("Fred", "Anchorage", "Salesman")
+	val joe = fred.copy(name="Joe"; role="Mechanic")
+
+	*/
+	//**************4.15****************//	
+
+	//defining an equals method (object equality)
+	/*
+	class Person(name:String, age:Int){
+		def canEqual(a:Any) = a.isInstanceOf[Person]
+
+		override def equals(that: Any): Boolean =
+			that match{
+				case that: Person => that.canEqual(this) && this.hashCode == that.hashCode
+				case _ => false
+			}
+
+		override def hashCode:Int = {
+			val prime = 31
+			val result = 1
+			result = prime * result + age
+			result = prime * result + (if (name == null) 0 else name.hashCode)
+				result
+		}	
+	}
+
+	//first two instances should be equal
+	val nimoy = new Person("Leonard Nimoy", 82)
+	val nimoy2 = new Person("Leonard Nimoy", 82)
+	val shatner new Person("Wiliam Shatner", 82)
+	val ed = new Person("Ed Chigliak", 20)
+
+	//tests pass
+	test("nimoy == nimoy") { assert(nimoy == nimoy)}
+	test("nimoy == nimoy2") { assert(nimoy == nimoy2)}
+	test("nimoy2 == nimoy") { assert(nimoy2 == nimoy)}
+	test("nimoy != shatner") { assert(nimoy != shatner)}
+	test("shatner != nimoy") { assert(shatner != nimoy)}
+	test("nimoy != null") { assert(nimoy != null)}
+	test("nimoy != String") { assert(nimoy != "Leonard")}
+	test("nimoy != ed") { assert(nimoy != ed)}
+
+	class Employee(name:String, age:Int, role:String)
+	extends Person(name, age){
+		override def canEqual(a:Any) = a.isInstanceOf[Employee]
+
+		override def equals(that: Any): Boolean =
+			that match{
+				case that: Employee => that.canEqual(this) && this.hashCode == that.hashCode
+				case _ => false
+			}
+
+		override def hashCode:Int = {
+			val ourHash = if(role ==null) 0 else role.hashCode
+			super.hashCode + ourHash
+		}	
+	}
+	
+
+	class EmployeeTests extends FunSuite with BeforeAndAfter {
+	// these first two instance should be equal
+	val eNimoy1 = new Employee("Leonard Nimoy", 82, "Actor")
+	val eNimoy2 = new Employee("Leonard Nimoy", 82, "Actor")
+	val pNimoy  = new Person("Leonard Nimoy", 82)
+	val eShatner = new Employee("William Shatner", 82, "Actor")
+
+  	test("eNimoy1 == eNimoy1") { assert(eNimoy1 == eNimoy1) }
+  	test("eNimoy1 == eNimoy2") { assert(eNimoy1 == eNimoy2) }
+  	test("eNimoy2 == eNimoy1") { assert(eNimoy2 == eNimoy1) }
+  	test("eNimoy != pNimoy")  { assert(eNimoy1 != pNimoy) }
+  	test("pNimoy != eNimoy")  { assert(pNimoy != eNimoy1) }
+
+  	*/
+	//**************4.16****************//	
+
+	//creating inner class
+	class PandoraBox {
+		case class Thing(name: String)
+
+		var things = new collection.mutable.ArrayBuffer[Thing]()
+		things += Thing("evil thing #1")
+		things += Thing("evil thing #2")
+
+		def addThings(name:String):Unit = { things += new Thing(name)}
+	}
+
+	val pandora = new PandoraBox
+	pandora.things.foreach(println)
+	pandora.addThings("evil thing #3")
+	pandora.things.foreach(println)
+
+
+	class OuterClass{
+		class InnerClass{
+			var x =1
+		}
+	}
+	// inner classes are bound to the outer object
+	val oc1 = new OuterClass 
+	val oc2 = new OuterClass
+	val ic1 = new  oc1.InnerClass
+	val ic2 = new oc2.InnerClass
+	ic1.x = 10
+	ic2.x = 20
+	println(s"ic1.x = ${ic1.x}")
+	println(s"ic2.x = ${ic2.x}")
+
+	/*
+	object OuterObject{
+		class InnerClass{
+			var x = 1
+		}
+	}
+
+	class OuterClass{
+		object InnerObject{
+			val y = 2
+		}
+	}
+
+	//object InnerClassDemo2 extends App {
+		//class inside object
+		println(new OuterObject.InnerClass().x)
+		println(new OuterClass().InnerObject.y)
+	//}
+	
+	*/
 
 
 	}
