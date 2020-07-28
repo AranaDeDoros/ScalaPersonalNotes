@@ -165,7 +165,7 @@ object Ch5 extends App {
 	}
 
 	val c = new Connection
-	c.makeConnection() //must use empty as the method signature takes more than one param
+	c.makeConnection() //must use empty when the method signature takes more than one param
 	c.makeConnection(2000)
 	c.makeConnection(3000, "https")
 
@@ -173,7 +173,7 @@ object Ch5 extends App {
 	c.makeConnection(protocol ="https")
 	c.makeConnection(timeout=1000, protocol="https")
 
-	//if method mixes default valued params and regular
+	//if method mixes default value params and regular
 	//put them last
 	
 	/*class Connection{
