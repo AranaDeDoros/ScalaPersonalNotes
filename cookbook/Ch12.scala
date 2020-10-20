@@ -1,11 +1,11 @@
 object Ch12 extends App {
-	
+
 	//12
 	//File and processes
 
-	//***************12.1*****************//	
+	//***************12.1*****************//
 	//how to open and read a file
-	
+
 	//concise syntax, file is open until the JVM shutdowns
 	import scala.io.Source
 /*	val fileName = "Ch12.scala"
@@ -28,7 +28,7 @@ object Ch12 extends App {
 	getLines returns an Iterator
 	and it returns each line without any newline chars
 	 */
-	
+
 	//loan pattern
 	/*
 	“ensures that a resource
@@ -101,17 +101,17 @@ object Ch12 extends App {
 
 	//multiple fromFile methods
 	/*there are eight variations of the fromFile method that let you
-	specify a character encoding, buffer size, codec, and URI. 
+	specify a character encoding, buffer size, codec, and URI.
 	For instance, you can specify an expected character encoding for a file like this*/
 
 	//Source.fromFile("Ch12.scala", "UTF-8")
 
-	//***************12.2*****************//	
+	//***************12.2*****************//
 
 	//writting text files
 
 	import java.io._
-	val pw = new PrintWriter(new File("hello.txt"))	
+	val pw = new PrintWriter(new File("hello.txt"))
 	pw.write("hello world")
 	pw.close()
 
@@ -120,8 +120,8 @@ object Ch12 extends App {
 	bw.write("text")
 	bw.close()
 
-	//***************12.3*****************//	
-	
+	//***************12.3*****************//
+
 	//reading and writing binary files
 
 	object CopyBytes {
@@ -130,7 +130,7 @@ object Ch12 extends App {
 
 		try{
 			in = Some(new FileInputStream("/Ch11.scala"))
-			out = Some(new FileOutputStream("/Ch11.class.copy"))		
+			out = Some(new FileOutputStream("/Ch11.class.copy"))
 			var c = 0
 			while( {c = in.get.read; c!= -1}){
 				out.get.write(c)
@@ -145,8 +145,8 @@ object Ch12 extends App {
 
 	}
 
-	//***************12.4*****************//	
-	
+	//***************12.4*****************//
+
 	//process every character
 
 	/*val sourcez = io.Source.fromFile("Ch12.scala")
@@ -161,7 +161,7 @@ object Ch12 extends App {
 		 for {
 			 char <- source
 			 if char.toByte == NEWLINE
-		} 
+		}
 		newlineCount += 1
 		newlineCount
 	}
@@ -173,12 +173,12 @@ object Ch12 extends App {
 		line <- source.getLines
 		c <- line
 		if c.toByte == NEWLINE
-		} 
+		}
 		newlineCount += 1
 		newlineCount
 	}*/
 
-	//***************12.5*****************//	
+	//***************12.5*****************//
 
 	//process a csv file
 
@@ -252,8 +252,8 @@ object Ch12 extends App {
 		 }
 	 }
 
-	//***************12.6*****************//	 
-	
+	//***************12.6*****************//
+
 	//pretending that string is a file
 
 	import io.Source
@@ -275,10 +275,10 @@ object Ch12 extends App {
 		 }
 	}
 
-	//***************12.7*****************//	
-	
+	//***************12.7*****************//
+
 	//serialization
-	
+
 	/*@SerialVersionUID(100L)
 	class Stock(var symbol: String, var price: BigDecimal) extends Serializable
 	*/
@@ -309,10 +309,10 @@ object Ch12 extends App {
 		// (4) print the object that was read back in
 		//println(stock)
 
-	//***************12.8*****************//	
+	//***************12.8*****************//
 
 	//listing files in a directory
-	
+
 	def getListOfFiles(dir: String):List[File] = {
 		val d = new File(dir)
 		if(d.exists() && d.isDirectory()){
@@ -337,7 +337,7 @@ object Ch12 extends App {
 
 	files2.foreach{println}
 
-	//***************12.9*****************//	
+	//***************12.9*****************//
 
 	//listing subdirectories beneath a directory
 
@@ -384,7 +384,7 @@ object Ch12 extends App {
 		dirs
 	}*/
 
-	//***************12.10*****************//	
+	//***************12.10*****************//
 
 	//executing external commands
 
@@ -422,13 +422,13 @@ object Ch12 extends App {
 	However, there’s a big difference between an external command
 	and a shell built-in command. The ls command is an external command that’s available
 	on all Unix systems, and can be found as a file in the /bin directory:
-	
+
 	Some other commands that can be used at a Unix command line, such as the cd or for
 	commands in the Bash shell, are actually built into the shell; you won’t find them as files
 	on the filesystem. Therefore, these commands can’t be executed unless they’re executed
-	from within a shell. 
+	from within a shell.
 	 */
-	
+
 	 //***************12.11*****************//
 
 	//executing external commands using STDOUT
@@ -465,8 +465,8 @@ object Ch12 extends App {
 	val executable2 = "which hadoop2".lazyLines_!.headOption
 
 
-	//***************12.12*****************//	
-	
+	//***************12.12*****************//
+
 	//handling STDOUT and STDERR for external commands
 
 	/*
@@ -491,8 +491,8 @@ object Ch12 extends App {
 	*/
 
 
-	//***************12.13*****************//	
-	
+	//***************12.13*****************//
+
 	//build a pipeline of commands
 
 	val numProcs = ("ps auxw" #| "wc -l").!!.trim
@@ -506,9 +506,9 @@ object Ch12 extends App {
 
 	val r = Seq("/", " -c", " ls | grep .scala").!!
 	println(r)
-	
+
 	//***************12.14*****************//
-		
+
 	//redirecting to the STDIN and STDOUT
 
 	import java.io.File
@@ -539,12 +539,12 @@ object Ch12 extends App {
 	another ProcessBuilder, or something else such as a java.io.File or a
 	java.lang.InputStream.”
 	*/
-	
+
 	//append
 	("ps aux" #>> new File("ps.out")).!
-	
-	 //***************12.15*****************//	
-	
+
+	 //***************12.15*****************//
+
 	//using && and || with processes
 
 	/*val result = ("ls temp" #&& "rm temp" #|| "echo 'temp' not found").!!.trim
@@ -564,7 +564,7 @@ object Ch12 extends App {
 	//handling wildcard characters
 
 	/*
-	Putting a shell wildcard character like * into a command 
+	Putting a shell wildcard character like * into a command
 	doesn’t work because the * needs to be interpreted and expanded by a shell
 	 */
 	/*In each example, you can make these commands work
@@ -572,7 +572,7 @@ object Ch12 extends App {
 	//val status = Seq("/bin/sh", "-c", "ls *.scala").!
 	/*
 	As an exception to this general rule, the -name option of
-	the find command may work because it treats the * character 
+	the find command may work because it treats the * character
 	as a wildcard character itself
 	 */
 	//val status = Seq("find", ".", "-name", "*.scala", "-type", "f").mkString.!
@@ -600,7 +600,9 @@ object Ch12 extends App {
 
 	//last parameter is a vararg
 
-	//***************12.19*****************//	
+	//***************12.19*****************//
 	//tables*/
+
+	//13 -> Actors and Concurrency, skipping for now
 
 }
