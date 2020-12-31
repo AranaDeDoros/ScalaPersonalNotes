@@ -1,5 +1,7 @@
 object PointOfSale extends App {
 
+	type ProductList = Vector[Product]
+
 	import scala.collection.immutable._
 
 	case class Product(id: Int, sku: String, name: String, model: String, unitPrice: Double,
@@ -43,7 +45,7 @@ object PointOfSale extends App {
 	case class Category(id:Int, description: String){}
 
 	case class Offer(id:Int, description: String, active: Boolean, discount: Double,
-					 start: String, end: String , productList: Vector[Product]){
+					 start: String, end: String , productList: ProductList){
 
 		val markedForOffer = productList.map{ _.id }
 
@@ -70,13 +72,13 @@ object PointOfSale extends App {
 
 		val location = Stock.isLocatedAt(locationId)
 
-		def filterBy(products: Vector[Product], customFilter:(Product) => Boolean) = {
+		def filterBy(products: ProductList, customFilter:(Product) => Boolean) = {
 
 				products.filter{customFilter}
 
 		}
 
-		def sortBy(f: Vector[Product] => Vector[Product]) = f(this.products)
+		def sortBy(f: ProductList => ProductList) = f(this.products)
 
 		def sortProductsByPrice =  this.products.sortWith(_.price > _.price)
 
@@ -88,15 +90,15 @@ object PointOfSale extends App {
 
 	object Stock{
 
-		def search(f:(String) => Option[Vector[Product]], query:String) = f(query)
+		def search(f:(String) => Option[ProductList], query:String) = f(query)
 
-		def retrieveProducts(locationId: Int) : Option[Vector[Product]] = ???
+		def retrieveProducts(locationId: Int) : Option[ProductList] = ???
 
-		def retrieveProductsByStockId(id: Int) : Option[Vector[Product]] = ???
+		def retrieveProductsByStockId(id: Int) : Option[ProductList] = ???
 
 		def retrieveProductById(productId:Int) : Option[Product] = ???
 
-		def retrieveProductsByCategory(categoryId: Int) : Option[Vector[Product]] = ???
+		def retrieveProductsByCategory(categoryId: Int) : Option[ProductList] = ???
 
 		def retrieveProductsBySupplier(supplierId: Int) : Option[Vector[Supplier]] = ???
 
@@ -105,7 +107,7 @@ object PointOfSale extends App {
 	}
 
 	case class Sale(transactionId: String, date: String,
-					locationId: Int, products: Vector[Product], offer: Option[Offer]){
+					locationId: Int, products: ProductList, offer: Option[Offer]){
 
 		implicit val vat = TaxCalculator.currentVAT
 
